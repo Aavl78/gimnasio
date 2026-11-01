@@ -16,7 +16,7 @@
             <div th:if="${param.logout}" class="alert alert-success">Sesión cerrada.</div>
             <div th:if="${param.registrado}" class="alert alert-success">Cuenta creada. Ya puede iniciar sesión.</div>
             <div th:if="${param.recuperado}" class="alert alert-success">Contraseña actualizada. Ya puede iniciar sesión.</div>
-Y después del </form>:
+
             
 
             <form th:action="@{/login}" method="post">
