@@ -34,6 +34,21 @@ public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passw
         usuarioRepository.save(usuario);
     }
 
+    // Cambia la contraseña si el correo y la cédula coinciden
+    public void recuperarPassword(String correo, String cedula, String nuevaPassword) {
+        Usuario usuario = usuarioRepository.findByCorreo(correo)
+                .orElseThrow(() -> new IllegalArgumentException("El correo y la cédula no coinciden"));
+
+        if (!usuario.getCedula().equals(cedula)) {
+            throw new IllegalArgumentException("El correo y la cédula no coinciden");
+        }
+        validarPassword(nuevaPassword);
+
+        usuario.setPassword(passwordEncoder.encode(nuevaPassword));
+        usuarioRepository.save(usuario);
+    }
+
+
     // Revisa que la contraseña tenga al menos 6 caracteres
     private void validarPassword(String password) {
         if (password == null || password.length() < 6) {
