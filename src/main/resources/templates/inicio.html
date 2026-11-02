@@ -1,9 +1,22 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<body>
-<h1>Bienvenido</h1>
-<form th:action="@{/logout}" method="post">
-    <button type="submit">Cerrar sesión</button>
-</form>
-</body>
-</html>
+<!DOCTYPE html> 
+<html lang="es" 
+      xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> 
+<head th:replace="~{fragments :: head('Inicio')}"></head> 
+<body> 
+ 
+<nav th:replace="~{fragments :: navbar}"></nav> 
+ 
+<div class="container"> 
+    <div class="card shadow-sm"> 
+        <div class="card-body"> 
+            <h2>Bienvenido, <span sec:authentication="name"></span></h2> 
+            <p sec:authorize="hasRole('ENTRENADOR')">Ingresaste como <strong>entrenador</strong>.</p> 
+            <p sec:authorize="hasRole('CLIENTE')">Ingresaste como <strong>cliente</strong>.</p> 
+        </div> 
+    </div> 
+</div> 
+ 
+<th:block th:replace="~{fragments :: scripts}"></th:block> 
+</body> 
+</html> 
