@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments :: head('Editar cliente')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+
+<div class="container" style="max-width: 600px;">
+    <h2 class="mb-4">Editar cliente</h2>
+
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form th:action="@{/admin/clientes/{id}/editar(id=${cliente.id})}" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" name="nombre" class="form-control" th:value="${cliente.nombre}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Cédula</label>
+                    <input type="text" name="cedula" class="form-control" th:value="${cliente.cedula}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Correo</label>
+                    <input type="email" name="correo" class="form-control" th:value="${cliente.correo}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Teléfono</label>
+                    <input type="text" name="telefono" class="form-control" th:value="${cliente.telefono}">
+                </div>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a th:href="@{/admin/clientes}" class="btn btn-secondary">Volver</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments :: scripts}"></th:block>
+</body>
+</html>
