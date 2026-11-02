@@ -2,13 +2,14 @@ package com.gimnasio.model;
 
 import java.time.LocalDateTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import  jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -26,11 +27,13 @@ public class Clase {
 
     //Muchas clases pertenecen a un entrenador
     @NotNull (message = "Debe elegir un entrenador")
-    @ManyToOne //muchos a uno
-    @JoinColumn (name = "entreador id", nullable = false) //crea la llave foranea de la otra columna
+    //@ManyToOne //muchos a uno
+    @JoinColumn(name = "entrenador_id", nullable = false) //crea la llave foranea de la otra columna
     private Usuario entrenador;
 
+
     @NotNull(message = "La fecha y hora de inicio es obligatoria")
+    @DateTimeFormat (pattern = "yyyy-MM-dd'T'HH:mm") //formato de fecha y hora
     @Column(nullable = false)
     private LocalDateTime fechaHoraInicio;
 
@@ -110,4 +113,12 @@ public class Clase {
         this.cancelada = cancelada;
     }
 
+    public int getCuposOcupados() {
+        return 0;         
+    }
+    // Método para calcular los cupos disponibles
+    public int getCuposDisponibles() {
+        return cupoMaximo - getCuposOcupados();
+    }
+    
 }
