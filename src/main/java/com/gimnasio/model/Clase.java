@@ -10,11 +10,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import  jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
 @Entity 
 @Table(name= "clases")
 public class Clase {
@@ -27,7 +27,7 @@ public class Clase {
 
     //Muchas clases pertenecen a un entrenador
     @NotNull (message = "Debe elegir un entrenador")
-    //@ManyToOne //muchos a uno
+    @ManyToOne //muchos a uno
     @JoinColumn(name = "entrenador_id", nullable = false) //crea la llave foranea de la otra columna
     private Usuario entrenador;
 
