@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments :: head('Mi perfil')}"></head>
+
+<body>
+
+<nav th:replace="~{fragments :: navbar}"></nav>
+
+<div class="container" style="max-width: 600px;">
+
+    <h2 class="mb-4">Mi perfil</h2>
+
+    <div th:if="${exito}" class="alert alert-success" th:text="${exito}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+
+            <h5 class="card-title">Mis datos</h5>
+
+            <form th:action="@{/cliente/perfil}" method="post">
+
+                <div class="mb-3">
+                    <label class="form-label">Correo (no se puede cambiar)</label>
+                    <input type="email" class="form-control"
+                           th:value="${cliente.correo}" disabled>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" name="nombre" class="form-control"
+                           th:value="${cliente.nombre}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Cédula</label>
+                    <input type="text" name="cedula" class="form-control"
+                           th:value="${cliente.cedula}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Teléfono</label>
+                    <input type="text" name="telefono" class="form-control"
+                           th:value="${cliente.telefono}">
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Guardar cambios
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <h5 class="card-title">Cambiar contraseña</h5>
+
+            <form th:action="@{/cliente/perfil/password}" method="post">
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        Nueva contraseña (mínimo 6 caracteres)
+                    </label>
+
+                    <input type="password" name="nuevaPassword"
+                           class="form-control" minlength="6" required>
+                </div>
+
+                <button type="submit" class="btn btn-warning">
+                    Cambiar contraseña
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+<th:block th:replace="~{fragments :: scripts}"></th:block>
+
+</body>
+</html>
