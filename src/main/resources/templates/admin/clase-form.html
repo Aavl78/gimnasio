@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments :: head('Clase')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+
+<div class="container" style="max-width: 600px;">
+    <h2 class="mb-4" th:text="${clase.id == null} ? 'Nueva clase' : 'Editar clase'">Clase</h2>
+
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form th:action="@{/admin/clases/guardar}" th:object="${clase}" method="post">
+                <input type="hidden" th:field="*{id}">
+
+                <div class="mb-3">
+                    <label class="form-label">Nombre o tipo de clase</label>
+                    <input type="text" th:field="*{nombre}" class="form-control"
+                           placeholder="CrossFit, Spinning, Yoga..." required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Entrenador</label>
+                    <select name="entrenadorId" class="form-select" required>
+                        <option value="">-- Seleccione un entrenador --</option>
+                        <option th:each="e : ${entrenadores}"
+                                th:value="${e.id}"
+                                th:text="${e.nombre}"
+                                th:selected="${clase.entrenador != null and clase.entrenador.id == e.id}"></option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Fecha y hora de inicio</label>
+                    <input type="datetime-local" th:field="*{fechaHoraInicio}" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Hora de finalización</label>
+                    <input type="text" class="form-control" disabled
+                           value="Se calcula automáticamente: inicio + 1 hora">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Cupo máximo</label>
+                    <input type="number" th:field="*{cupoMaximo}" class="form-control" min="1" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a th:href="@{/admin/clases}" class="btn btn-secondary">Volver</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments :: scripts}"></th:block>
+</body>
+</html>

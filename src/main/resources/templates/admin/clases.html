@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments :: head('Clases')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Clases</h2>
+        <a th:href="@{/admin/clases/nueva}" class="btn btn-primary">+ Nueva clase</a>
+    </div>
+
+    <div th:if="${exito}" class="alert alert-success" th:text="${exito}"></div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Clase</th>
+                    <th>Entrenador</th>
+                    <th>Inicio</th>
+                    <th>Fin</th>
+                    <th>Cupo máx.</th>
+                    <th>Ocupados</th>
+                    <th>Disponibles</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="c : ${clases}">
+                    <td th:text="${c.nombre}"></td>
+                    <td th:text="${c.entrenador.nombre}"></td>
+                    <td th:text="${#temporals.format(c.fechaHoraInicio, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td th:text="${#temporals.format(c.fechaHoraFin, 'HH:mm')}"></td>
+                    <td th:text="${c.cupoMaximo}"></td>
+                    <td th:text="${c.cuposOcupados}"></td>
+                    <td th:text="${c.cuposDisponibles}"></td>
+                    <td>
+                        <span th:if="${c.cancelada}" class="badge bg-danger">Cancelada</span>
+                        <span th:unless="${c.cancelada}" class="badge bg-success">Activa</span>
+                    </td>
+                    <td>
+                        <th:block th:unless="${c.cancelada}">
+                            <a th:href="@{/admin/clases/{id}/editar(id=${c.id})}" class="btn btn-sm btn-outline-primary">Editar</a>
+                            <form th:action="@{/admin/clases/{id}/cancelar(id=${c.id})}" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('¿Cancelar esta clase?')">Cancelar</button>
+                            </form>
+                        </th:block>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(clases)}">
+                    <td colspan="9" class="text-center text-muted">No hay clases registradas</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments :: scripts}"></th:block>
+</body>
+</html>
