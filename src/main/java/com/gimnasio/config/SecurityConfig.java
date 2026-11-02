@@ -20,25 +20,35 @@ public class SecurityConfig {
     }
 
     //Reglas: que rutas son publicas y que rol puede entrar a cada una
-    @Bean 
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception
-    {
-        http
-        .authorizeHttpRequests(auth -> auth.requestMatchers("/login", "/registro", "/recuperar", "/error", "/css/**", "/js/**").permitAll()
-                .requestMatchers("/admin/**").hasRole("ENTRENADOR")
-                .requestMatchers("/cliente/**").hasRole("CLIENTE")
-                .anyRequest().authenticated() 
-            )
-            .formLogin(form -> form
-                .loginPage("/login")
-                .usernameParameter("correo")
-                .defaultSuccessUrl("/",true)
-                .permitAll()
-            )
-            .logout(logout -> logout
-                .logoutSuccessUrl("/login?logout")
-                .permitAll()
-            );
-            return http.build();
+    
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/h2-console/**").permitAll()
+            .requestMatchers("/login", "/registro", "/recuperar", "/error",
+                    "/css/**", "/js/**").permitAll()
+            .requestMatchers("/admin/**").hasRole("ENTRENADOR")
+            .requestMatchers("/cliente/**").hasRole("CLIENTE")
+            .anyRequest().authenticated()
+        )
+        .formLogin(form -> form
+            .loginPage("/login")
+            .usernameParameter("correo")
+            .defaultSuccessUrl("/", true)
+            .permitAll()
+        )
+        .logout(logout -> logout
+            .logoutSuccessUrl("/login?logout")
+            .permitAll()
+        )
+        .csrf(csrf -> csrf
+            .ignoringRequestMatchers("/h2-console/**")
+        )
+        .headers(headers -> headers
+            .frameOptions(frame -> frame.sameOrigin())
+        );
+
+    return http.build();
     }
 }

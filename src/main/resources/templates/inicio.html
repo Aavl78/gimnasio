@@ -1,9 +1,19 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Inicio')}"></head>
 <body>
-<h1>Bienvenido</h1>
-<form th:action="@{/logout}" method="post">
-    <button type="submit">Cerrar sesión</button>
-</form>
+
+<nav th:replace="~{fragments :: navbar}"></nav>
+
+<div class="container text-center">
+    <div class="card shadow-sm p-5">
+        <h1>Bienvenido al Gimnasio</h1>
+        <p class="lead">Sistema de gestión de clientes y gimnasio.</p>
+        <p>Desde el menú superior puedes acceder a las diferentes opciones.</p>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments :: scripts}"></th:block>
+
 </body>
 </html>
