@@ -24,6 +24,16 @@ public class DatosIniciales {
                 admin.setRol(Rol.ENTRENADOR);
                 repo.save(admin);
             }
+              if (!repo.existsByCorreo("entrenador2@gimnasio.com")) {
+                Usuario entrenador2 = new Usuario();
+                entrenador2.setNombre("Laura Mora");
+                entrenador2.setCedula("100000003");
+                entrenador2.setCorreo("entrenador2@gimnasio.com");
+                entrenador2.setPassword(encoder.encode("entrenador123"));
+                entrenador2.setTelefono("88882222");
+                entrenador2.setRol(Rol.ENTRENADOR);
+                repo.save(entrenador2);
+            }
             if (!repo.existsByCorreo("cliente@gimnasio.com")) {
                 Usuario cliente = new Usuario();
                 cliente.setNombre("Cliente Prueba");
