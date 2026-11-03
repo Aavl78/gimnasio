@@ -26,7 +26,8 @@ public class SecurityConfig {
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/h2-console/**").permitAll()
+           //desactivado para no entrar por consola
+           // .requestMatchers("/h2-console/**").permitAll()
             .requestMatchers("/login", "/registro", "/recuperar", "/error",
                     "/css/**", "/js/**").permitAll()
             .requestMatchers("/admin/**").hasRole("ENTRENADOR")
