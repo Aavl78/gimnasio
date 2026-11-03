@@ -52,17 +52,11 @@ public class Clase {
     public  Clase(){
     }
 
-     // Se ejecuta automáticamente antes de guardar o actualizar
-    @PrePersist
-    @PreUpdate
-    public void calcularHoraFin(){
-        if (fechaHoraInicio != null) {
-            fechaHoraFin = fechaHoraInicio.plusHours(1);
-        }
-
-    }
+    
 
     // Se ejecuta automáticamente antes de guardar o actualizar
+     @PrePersist
+    @PreUpdate
     public void calcularHoraFin(){
         if (fechaHoraInicio != null) {
             fechaHoraFin = fechaHoraInicio.plusHours(1);
