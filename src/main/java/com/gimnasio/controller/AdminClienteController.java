@@ -2,23 +2,32 @@ package com.gimnasio.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.gimnasio.model.Usuario;
 import com.gimnasio.service.ClienteService;
+import com.gimnasio.service.UsuarioService;
+
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/admin/clientes")
 public class AdminClienteController {
 
     private final ClienteService clienteService;
+    private final UsuarioService usuarioService;   // NUEVO
 
-    public AdminClienteController(ClienteService clienteService) {
+    // Spring entrega los dos services
+    public AdminClienteController(ClienteService clienteService, UsuarioService usuarioService) {
         this.clienteService = clienteService;
+        this.usuarioService = usuarioService;      // NUEVO
     }
 
     // Lista de todos los clientes
@@ -26,6 +35,32 @@ public class AdminClienteController {
     public String listar(Model model) {
         model.addAttribute("clientes", clienteService.listarClientes());
         return "admin/clientes";
+    }
+
+    //muestra el formulario vacío para crear un cliente
+    @GetMapping("/nuevo")
+    public String nuevo(Model model) {
+        model.addAttribute("usuario", new Usuario());
+        return "admin/cliente-nuevo";
+    }
+
+    //recibe el formulario y crea el cliente
+    @PostMapping("/nuevo")
+    public String crear(@Valid @ModelAttribute("usuario") Usuario usuario,
+                        BindingResult resultado,
+                        Model model,
+                        RedirectAttributes redirect) {
+        if (resultado.hasErrors()) {
+            return "admin/cliente-nuevo";
+        }
+        try {
+            usuarioService.registrarCliente(usuario);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            return "admin/cliente-nuevo";
+        }
+        redirect.addFlashAttribute("exito", "Cliente creado correctamente");
+        return "redirect:/admin/clientes";
     }
 
     // Formulario de edición

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments :: head('Nuevo cliente')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+
+<div class="container" style="max-width: 600px;">
+    <h2 class="mb-4">Nuevo cliente</h2>
+
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form th:action="@{/admin/clientes/nuevo}" th:object="${usuario}" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Nombre completo</label>
+                    <input type="text" th:field="*{nombre}" class="form-control">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Cédula</label>
+                    <input type="text" th:field="*{cedula}" class="form-control">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('cedula')}" th:errors="*{cedula}"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Correo</label>
+                    <input type="email" th:field="*{correo}" class="form-control">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Teléfono</label>
+                    <input type="text" th:field="*{telefono}" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Contraseña inicial (mínimo 6 caracteres)</label>
+                    <input type="password" th:field="*{password}" class="form-control">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                </div>
+                <button type="submit" class="btn btn-primary">Crear cliente</button>
+                <a th:href="@{/admin/clientes}" class="btn btn-secondary">Volver</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments :: scripts}"></th:block>
+</body>
+</html>

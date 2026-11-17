@@ -12,7 +12,8 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
-public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -47,7 +48,6 @@ public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passw
         usuario.setPassword(passwordEncoder.encode(nuevaPassword));
         usuarioRepository.save(usuario);
     }
-
 
     // Revisa que la contraseña tenga al menos 6 caracteres
     private void validarPassword(String password) {

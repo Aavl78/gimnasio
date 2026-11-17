@@ -10,6 +10,7 @@ Base de datos H2
 Thymeleaf
 Bootstrap
 Maven
+https://github.com/Aavl78/gimnasio
 Cómo ejecutar el proyecto
 Tener instalado Java 21 o superior.
 Abrir la carpeta del proyecto en Visual Studio Code.
