@@ -9,6 +9,9 @@
 <div class="container">
     <h2 class="mb-4">Clases disponibles</h2>
 
+    <div th:if="${exito}" class="alert alert-success" th:text="${exito}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
     <div class="row">
         <div class="col-md-6 col-lg-4 mb-4" th:each="c : ${clases}">
             <div class="card shadow-sm h-100">
@@ -29,9 +32,14 @@
                     <span class="badge bg-primary" th:text="'Disponibles: ' + ${c.cuposDisponibles}"></span>
                     <span class="badge bg-secondary" th:text="'Ocupados: ' + ${c.cuposOcupados}"></span>
                     <span class="badge bg-light text-dark" th:text="'Cupo: ' + ${c.cupoMaximo}"></span>
+                    <span th:if="${c.finalizada}" class="badge bg-dark">Finalizada</span>
+                    <span th:if="${!c.finalizada and c.cuposDisponibles <= 0}" class="badge bg-danger">Llena</span>
                 </div>
                 <div class="card-footer bg-white">
-                    <button class="btn btn-outline-primary btn-sm w-100" disabled>Matrícula: próximamente</button>
+                    <!-- El botón siempre se muestra: las reglas las valida el service -->
+                    <form th:action="@{/cliente/clases/{id}/matricular(id=${c.id})}" method="post">
+                        <button type="submit" class="btn btn-primary btn-sm w-100">Matricularme</button>
+                    </form>
                 </div>
             </div>
         </div>
