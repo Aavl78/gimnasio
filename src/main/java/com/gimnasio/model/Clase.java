@@ -1,6 +1,8 @@
 package com.gimnasio.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -11,12 +13,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+
 @Entity 
 @Table(name= "clases")
 public class Clase {
@@ -48,6 +52,10 @@ public class Clase {
     private Integer cupoMaximo;
 
     private boolean cancelada = false;
+
+    // Una clase tiene muchas reservas (lado inverso de Reserva.clase)
+    @OneToMany(mappedBy = "clase")
+    private List<Reserva> reservas = new ArrayList<>();
     
     public  Clase(){
     }
@@ -119,9 +127,23 @@ public class Clase {
         this.cancelada = cancelada;
     }
 
+    // Cupos ocupados = reservas ACTIVAS de esta clase (las canceladas no cuentan)
     public int getCuposOcupados() {
-        return 0;         
+        int ocupados = 0;
+        for (Reserva r : reservas) {
+            if (r.getEstado() == EstadoReserva.ACTIVA) {
+                ocupados++;
+            }
+        }
+        return ocupados;
     }
+
+    // La clase ya terminó si su hora de fin es anterior a este momento
+    public boolean isFinalizada() {
+        return fechaHoraFin != null && fechaHoraFin.isBefore(LocalDateTime.now());
+    }
+
+
     // Método para calcular los cupos disponibles
     public int getCuposDisponibles() {
         return cupoMaximo - getCuposOcupados();

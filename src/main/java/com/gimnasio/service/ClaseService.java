@@ -1,15 +1,21 @@
 package com.gimnasio.service;
 
-import com.gimnasio.model.Clase;
-import com.gimnasio.model.Rol;
-import com.gimnasio.model.Usuario;
-import com.gimnasio.repository.ClaseRepository;
-import com.gimnasio.repository.UsuarioRepository;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.gimnasio.model.Clase;
+import com.gimnasio.model.EstadoReserva;
+import com.gimnasio.model.Reserva;
+import com.gimnasio.model.Rol;
+import com.gimnasio.model.Usuario;
+import com.gimnasio.repository.ClaseRepository;
+import com.gimnasio.repository.ReservaRepository;
+import com.gimnasio.repository.UsuarioRepository;
+
 
 //clase para manejar la logica de negocio de las clases
 @Service 
@@ -17,10 +23,13 @@ public class ClaseService {
  
     private final ClaseRepository claseRepository; //inyectar dependencia del repositorio de clases para acceder a la base de datos
     private final UsuarioRepository usuarioRepository; 
+    private final ReservaRepository reservaRepository;
+
     // Constructor para inyectar las dependencias del repositorio de clases y usuarios    
-    public ClaseService(ClaseRepository claseRepository, UsuarioRepository usuarioRepository) {
+    public ClaseService(ClaseRepository claseRepository, UsuarioRepository usuarioRepository, ReservaRepository reservaRepository) {
         this.claseRepository = claseRepository;
         this.usuarioRepository = usuarioRepository;
+        this.reservaRepository = reservaRepository;
     }
 
     //Todas las clases (para el administrador)
@@ -40,6 +49,21 @@ public class ClaseService {
         }
         return disponibles;
     }
+
+    // Clases que ve el cliente: no canceladas, de los últimos 7 días en adelante.
+    // Se muestran también las finalizadas para que el SERVICE sea el que rechace (R3)
+    public List<Clase> listarParaCliente() {
+        List<Clase> lista = new ArrayList<>();
+        LocalDateTime haceUnaSemana = LocalDateTime.now().minusDays(7);
+
+        for (Clase c : claseRepository.findAllByOrderByFechaHoraInicioAsc()) {
+            if (!c.isCancelada() && c.getFechaHoraInicio().isAfter(haceUnaSemana)) {
+                lista.add(c);
+            }
+        }
+        return lista;
+    }
+
 
     public Clase buscarPorId(Long id) {
         return claseRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Clase no encontrada"));
@@ -102,10 +126,17 @@ public class ClaseService {
         return false;
     }
 
-    //cancelar no borra la clase, solo la marca como cancelada
+    // Cancelar no borra la clase, solo la marca como cancelada
+    // R9: también pasa a CANCELADA todas sus reservas activas
+    @Transactional
     public void cancelar(Long id) {
         Clase clase = buscarPorId(id);
         clase.setCancelada(true);
         claseRepository.save(clase);
+
+        for (Reserva r : reservaRepository.findByClaseIdAndEstado(id, EstadoReserva.ACTIVA)) {
+            r.cancelar("CLASE CANCELADA");
+            reservaRepository.save(r);
+        }
     }
 }
