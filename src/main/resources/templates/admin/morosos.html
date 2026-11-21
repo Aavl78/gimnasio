@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments :: head('Clientes morosos')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+
+<div class="container">
+    <h2 class="mb-4">Clientes morosos</h2>
+
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Nombre</th>
+                <th>Cédula</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="c : ${morosos}">
+                <td th:text="${c.nombre}"></td>
+                <td th:text="${c.cedula}"></td>
+                <td th:text="${c.correo}"></td>
+                <td th:text="${c.telefono}"></td>
+                <td>
+                    <a th:href="@{/admin/pagos/cliente/{clienteId}(clienteId=${c.id})}"
+                       class="btn btn-sm btn-outline-primary">Ver pagos</a>
+                    <a th:href="@{/admin/pagos/cliente/{clienteId}/nuevo(clienteId=${c.id})}"
+                       class="btn btn-sm btn-outline-success">Registrar pago</a>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(morosos)}">
+                <td colspan="5" class="text-center text-muted">No hay clientes morosos</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<th:block th:replace="~{fragments :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments :: head('Registrar pago')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+
+<div class="container" style="max-width: 600px;">
+    <h2 class="mb-1">Registrar pago</h2>
+    <p class="text-muted mb-4" th:text="'Cliente: ' + ${cliente.nombre}"></p>
+
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <form th:action="@{/admin/pagos/cliente/{clienteId}/guardar(clienteId=${cliente.id})}"
+          th:object="${pago}" method="post">
+        <div class="mb-3">
+            <label class="form-label">Fecha de pago</label>
+            <input type="date" th:field="*{fechaPago}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Monto (₡)</label>
+             <!-- Sin min="1" a propósito: PagoService valida que el monto sea mayor que cero -->
+            <input type="number" step="0.01" th:field="*{monto}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Fecha de vencimiento (hasta cuándo cubre el pago)</label>
+            <input type="date" th:field="*{fechaVencimiento}" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar pago</button>
+        <a th:href="@{/admin/pagos/cliente/{clienteId}(clienteId=${cliente.id})}" class="btn btn-secondary">Volver</a>
+    </form>
+</div>
+
+<th:block th:replace="~{fragments :: scripts}"></th:block>
+</body>
+</html>

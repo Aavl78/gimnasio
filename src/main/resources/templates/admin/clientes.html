@@ -39,7 +39,8 @@
                     </td>
                     <td>
                         <a th:href="@{/admin/clientes/{id}/editar(id=${c.id})}" class="btn btn-sm btn-outline-primary">Editar</a>
-
+                         <!-- ver y registrar pagos del cliente -->
+                        <a th:href="@{/admin/pagos/cliente/{clienteId}(clienteId=${c.id})}" class="btn btn-sm btn-outline-success">Pagos</a>
                         <form th:if="${c.activo}" th:action="@{/admin/clientes/{id}/desactivar(id=${c.id})}"
                               method="post" class="d-inline">
                             <button type="submit" class="btn btn-sm btn-outline-danger"
