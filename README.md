@@ -43,3 +43,28 @@ Integrantes
 Andrés Vargas León
 Jose Gabriel Castro Berrocal
 Roberth Cordero Alvarez
+
+
+AVANCE II - PAGOS Y RESERVAS
+
+Usuarios de prueba
+Administrador: admin@gimnasio.com / admin123
+Entrenador 2: entrenador2@gimnasio.com / entrenador123
+Cliente al dia: cliente@gimnasio.com / cliente123
+Cliente moroso: moroso@gimnasio.com / cliente123
+Cliente al dia 2: cliente2@gimnasio.com / cliente123
+
+Datos de prueba
+Yoga (finalizada): clase de ayer
+Pilates (llena): cupo 1, ya reservada por Ana Rojas
+Spinning: manana 18:00, reservada por Cliente Prueba
+Funcional: manana 18:30, se cruza con Spinning
+Zumba: en 2 dias, libre
+
+Nota: los datos se crean desde la fecha del primer arranque.
+Para reiniciarlos, apagar la app y borrar la carpeta data.
+
+Reglas de reserva (todas en ReservaService)
+R1 cliente al dia, R2 cupo, R3 clase vigente, R4 sin traslape,
+R5 sin duplicados, R6 estados ACTIVA/CANCELADA, R7 cancelar hasta 15 min
+despues del inicio, R8 admin cancela cualquiera, R9 cancelar clase cancela sus reservas.
