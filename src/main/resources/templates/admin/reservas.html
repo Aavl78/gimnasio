@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments :: head('Reservas')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+
+<div class="container">
+    <h2 class="mb-4">Monitoreo de reservas</h2>
+
+    <div th:if="${exito}" class="alert alert-success" th:text="${exito}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <!-- Filtros: el formulario usa GET, así los filtros quedan en la URL -->
+    <form th:action="@{/admin/reservas}" method="get" class="row g-2 mb-4">
+        <div class="col-md-5">
+            <select name="claseId" class="form-select">
+                <option value="">Todas las clases</option>
+                <option th:each="c : ${clases}" th:value="${c.id}"
+                        th:text="${c.nombre} + ' - ' + ${#temporals.format(c.fechaHoraInicio, 'dd/MM HH:mm')}"
+                        th:selected="${c.id == claseId}"></option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <select name="estado" class="form-select">
+                <option value="">Todos los estados</option>
+                <option th:each="e : ${estados}" th:value="${e}" th:text="${e.etiqueta}"
+                        th:selected="${e == estado}"></option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+            <a th:href="@{/admin/reservas}" class="btn btn-secondary">Limpiar</a>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Cliente</th>
+                    <th>Clase</th>
+                    <th>Inicio de la clase</th>
+                    <th>Reservada el</th>
+                    <th>Estado</th>
+                    <th>Cancelada por</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="r : ${reservas}">
+                    <td th:text="${r.cliente.nombre}"></td>
+                    <td th:text="${r.clase.nombre}"></td>
+                    <td th:text="${#temporals.format(r.clase.fechaHoraInicio, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td th:text="${#temporals.format(r.fechaReserva, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td>
+                        <span th:if="${r.estado.name() == 'ACTIVA'}" class="badge bg-success">Activa</span>
+                        <span th:if="${r.estado.name() == 'CANCELADA'}" class="badge bg-danger">Cancelada</span>
+                    </td>
+                    <td th:text="${r.canceladaPor}"></td>
+                    <td>
+                        <form th:if="${r.estado.name() == 'ACTIVA'}"
+                              th:action="@{/admin/reservas/{id}/cancelar(id=${r.id})}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                    onclick="return confirm('¿Cancelar esta reserva?')">Cancelar</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(reservas)}">
+                    <td colspan="7" class="text-center text-muted">No hay reservas con esos filtros</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments :: scripts}"></th:block>
+</body>
+</html>

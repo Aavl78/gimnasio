@@ -27,6 +27,7 @@
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/}">Inicio</a>
                 </li>
+
                 <!-- Solo ENTRENADOR -->
                 <li class="nav-item" sec:authorize="hasRole('ENTRENADOR')">
                     <a class="nav-link" th:href="@{/admin/clases}">Clases</a>
@@ -34,12 +35,25 @@
                 <li class="nav-item" sec:authorize="hasRole('ENTRENADOR')">
                     <a class="nav-link" th:href="@{/admin/clientes}">Clientes</a>
                 </li>
+                <li class="nav-item" sec:authorize="hasRole('ENTRENADOR')">
+                    <a class="nav-link" th:href="@{/admin/reservas}">Reservas</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ENTRENADOR')">
+                    <a class="nav-link" th:href="@{/admin/pagos/morosos}">Morosos</a>
+                </li>
+
                 <!-- Solo CLIENTE -->
                 <li class="nav-item" sec:authorize="hasRole('CLIENTE')">
                     <a class="nav-link" th:href="@{/cliente/clases}">Clases disponibles</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasRole('CLIENTE')">
                     <a class="nav-link" th:href="@{/cliente/perfil}">Mi perfil</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('CLIENTE')">
+                    <a class="nav-link" th:href="@{/cliente/reservas}">Mis reservas</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('CLIENTE')">
+                    <a class="nav-link" th:href="@{/cliente/pagos}">Mis pagos</a>
                 </li>
             </ul>
 

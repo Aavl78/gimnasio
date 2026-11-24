@@ -14,7 +14,7 @@ import com.gimnasio.model.Reserva;
 public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
     // R2 y cupos: cuántas reservas activas tiene una clase
-    //SELECT COUNT(*) FROM reservas WHERE clase_id = ? AND estado = ?
+    // SELECT COUNT(*) FROM reservas WHERE clase_id = ? AND estado = ?
     long countByClaseIdAndEstado(Long claseId, EstadoReserva estado);
 
     // R5: ¿el cliente ya tiene una reserva activa en esa clase?
@@ -38,5 +38,24 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
                                   @Param("estado") EstadoReserva estado,
                                   @Param("inicio") LocalDateTime inicio,
                                   @Param("fin") LocalDateTime fin);
-}
 
+
+    // ===== Monitoreo del administrador (filtros) =====
+
+    // Sin filtro: todas
+    @EntityGraph(attributePaths = {"cliente", "clase"})
+    List<Reserva> findAllByOrderByFechaReservaDesc();
+
+    // Filtro por clase
+    @EntityGraph(attributePaths = {"cliente", "clase"})
+    List<Reserva> findByClaseIdOrderByFechaReservaDesc(Long claseId);
+
+    // Filtro por estado
+    @EntityGraph(attributePaths = {"cliente", "clase"})
+    List<Reserva> findByEstadoOrderByFechaReservaDesc(EstadoReserva estado);
+
+    // Filtro por clase y estado
+    @EntityGraph(attributePaths = {"cliente", "clase"})
+    List<Reserva> findByClaseIdAndEstadoOrderByFechaReservaDesc(Long claseId, EstadoReserva estado);
+
+}

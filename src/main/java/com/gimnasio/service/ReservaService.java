@@ -134,5 +134,34 @@ public class ReservaService {
         }
         return historial;
     }
-}
 
+    // ===== Monitoreo del administrador (filtros) =====
+
+    // Filtra por clase, por estado, por ambos o sin filtro
+    public List<Reserva> filtrar(Long claseId, EstadoReserva estado) {
+        if (claseId != null && estado != null) {
+            return reservaRepository.findByClaseIdAndEstadoOrderByFechaReservaDesc(claseId, estado);
+        }
+        if (claseId != null) {
+            return reservaRepository.findByClaseIdOrderByFechaReservaDesc(claseId);
+        }
+        if (estado != null) {
+            return reservaRepository.findByEstadoOrderByFechaReservaDesc(estado);
+        }
+        return reservaRepository.findAllByOrderByFechaReservaDesc();
+    }
+
+    // R8: el administrador puede cancelar cualquier reserva (sin límite de 15 minutos)
+    @Transactional
+    public void cancelarPorAdmin(Long reservaId) {
+        Reserva reserva = buscarPorId(reservaId);
+
+        if (reserva.getEstado() == EstadoReserva.CANCELADA) {
+            throw new IllegalArgumentException("La reserva ya estaba cancelada");
+        }
+
+        reserva.cancelar("ADMINISTRADOR");
+        reservaRepository.save(reserva);
+    }
+
+}
